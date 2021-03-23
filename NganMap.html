@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            // dia chi UTC2
+            const SchoolUTC2 = { lat: 10.8458136, lng: 106.7939966 };
+            //dia chi nha
+            const NganHome = { lat: 10.8286045, lng: 106.7722089 };
+
+            //icon UTC2
+            const iconSchoolUTC2 = {
+                url: "LogoUTC.jpg",
+                scaledSize: new google.maps.Size(20, 20),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(0, 0)
+            };
+            //icon Nha Ngan
+            const iconNganHome = {
+                url: "NganIcon.jpg",
+                scaledSize: new google.maps.Size(20, 20),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(0, 0)
+            };
+            //infor school
+            const infoSchoolUTC2 = "Trường Đại Học Giao Thông Vận Tải PH tại TP. Hồ Chí Minh";
+            //infor Ngan
+            const infoNganHome = "<div>Nguyễn Sông Ngân<br /> 21 Tuổi<br />5951071062<br />16-10-2000<br />Nghệ An<br />nguyensongnganuuuu@gmail.com </div>";
+
+            // load Map
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: NganHome
+            });
+            directionsRenderer.setMap(map);
+
+            // icon UTC2
+            const markerUTC2 = new google.maps.Marker({
+                position: SchoolUTC2,
+                map: map,
+                title: "UTC2",
+                draggable: true,
+                icon: iconSchoolUTC2,
+                animation: google.maps.Animation.DROP,
+            });
+            // icon Ngan Home
+            const markerHouse = new google.maps.Marker({
+                position: NganHome,
+                map: map,
+                title: "House",
+                draggable: true,
+                icon: iconNganHome,
+                animation: google.maps.Animation.DROP,
+            });
+
+            // tao info
+            const infoSchoolUTC2Load = new google.maps.InfoWindow({
+                content: infoSchoolUTC2
+            });
+            markerUTC2.addListener("click", () => infoSchoolUTC2Load.open(map, markerUTC2));
+            const infoHouseLoad = new google.maps.InfoWindow({
+                content: infoNganHome
+            });
+            markerHouse.addListener("click", () => infoHouseLoad.open(map, markerHouse));
+
+            // function chi duong
+            function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+            directionsService.route(
+                {
+                    origin: SchoolUTC2,
+                    destination: NganHome,
+                    travelMode: google.maps.TravelMode.DRIVING,
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRenderer.setDirections(response);
+                    } else {window.alert("Directions request failed due to " + status);}});
+        }
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+        }
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
+        async>
+    </script>
+</body>
+</html>
